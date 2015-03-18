@@ -1,9 +1,11 @@
-class Alias < ActiveRecord::Base
+class Forward < ActiveRecord::Base
+  self.table_name = 'aliases'
 
   validates :origin, presence: true
   validates :destinations, presence: true
 
   validate :unique_active
+  validate :origin_as_mailbox
   validate :valid_to_self
   validate :valid_destinations
   before_save :compute_to
@@ -11,16 +13,8 @@ class Alias < ActiveRecord::Base
   belongs_to :mailbox, primary_key: :username, foreign_key: :origin
 
   def destinations=(dests)
-    dests = dests.split(/[,\ \n]/).map(&:strip).compact.reject{|d| d.blank?}.uniq.join("\n")
+    dests = dests.split(/[,\ \n]/).map(&:strip).join("\n")
     write_attribute :destinations, dests
-  end
-
-  def has_mailbox?
-    mailbox.present?
-  end
-
-  def not_mailbox?
-    ! has_mailbox?
   end
 
   def enabled?
@@ -49,9 +43,13 @@ class Alias < ActiveRecord::Base
   end
 
   def valid_to_self
-    if self.to_self && (not_mailbox? || mailbox.disabled?) && self.enabled?
+    if self.to_self && mailbox.disabled? && self.enabled?
       errors.add(:to_self, :cannot_to_self) 
     end
+  end
+
+  def origin_as_mailbox
+    errors.add(:origin, :not_mailbox) unless Mailbox.where(username: origin).any?
   end
 
   def valid_destinations

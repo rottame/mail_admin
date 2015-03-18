@@ -49,28 +49,34 @@ ActiveRecord::Schema.define(version: 20150317205718) do
   add_index "admin_users", ["username"], name: "index_admin_users_on_username", unique: true
 
   create_table "aliases", force: :cascade do |t|
-    t.string  "origin",                      null: false
-    t.text    "destinations",                null: false
-    t.boolean "to_self",      default: true
-    t.boolean "enabled",      default: true
-    t.text    "to",                          null: false
+    t.string   "origin",                      null: false
+    t.text     "destinations",                null: false
+    t.boolean  "enabled",      default: true
+    t.boolean  "to_self",      default: true
+    t.text     "to",                          null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "aliases", ["origin", "enabled"], name: "index_aliases_on_origin_and_enabled", unique: true
   add_index "aliases", ["origin"], name: "index_aliases_on_origin"
 
   create_table "mailboxes", force: :cascade do |t|
-    t.string  "username",                null: false
-    t.string  "password",                null: false
-    t.boolean "enabled",  default: true
+    t.string   "username",                  null: false
+    t.string   "password",                  null: false
+    t.boolean  "enabled",    default: true
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "mailboxes", ["username"], name: "index_mailboxes_on_username"
 
   create_table "virtuals", force: :cascade do |t|
-    t.string  "email"
-    t.string  "destination",                null: false
-    t.boolean "enabled",     default: true
+    t.string   "email"
+    t.string   "destination",                null: false
+    t.boolean  "enabled",     default: true
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "virtuals", ["email"], name: "index_virtuals_on_email"

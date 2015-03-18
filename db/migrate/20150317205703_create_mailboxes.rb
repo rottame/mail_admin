@@ -4,6 +4,8 @@ class CreateMailboxes < ActiveRecord::Migration
       t.string :username, index: :unique, null: false
       t.string :password, null: false
       t.boolean :enabled, default: true
+
+      t.timestamps null: false
     end
   end
 end

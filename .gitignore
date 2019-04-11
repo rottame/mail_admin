@@ -16,3 +16,10 @@
 !/log/.keep
 /tmp
 config/database.yml
+
+*~
+public/assets
+public/.well-known
+*.swp
+vendor/bundle
+

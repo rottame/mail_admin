@@ -1,0 +1,60 @@
+it:
+  activerecord:
+    models:
+      admin_user:
+        one: Amministratore
+        other: Amministratori
+      mailbox:
+        one: Mailbox
+        other: Mailbox
+      forward:
+        one: Inoltro
+        other: Inoltri
+      alias:
+        one: Alias
+        other: Alias
+    attributes:
+      admin_user:
+        username: Utente
+        email: Email
+        current_sign_in_at: Data login
+        sign_in_count: N. login
+        created_at: Creato il
+      mailbox:
+        username: Nome mailbox
+        password: Password
+        enabled: Attivo?
+      alias:
+        to_self: Salva nella mailbox?
+        enabled: Attivo?
+        destinations: Destinatari
+        origin: Origine
+      forward:
+        to_self: Salva nella mailbox?
+        enabled: Attivo?
+        destinations: Destinatari
+        origin: Origine
+    errors:
+      models:
+        forward:
+          attributes:
+            destinations:
+              destination_not_found: "destinazioni %{dests} non trovate"
+              do_not_add_self: "non aggiungere %{origin} ai destinatari"
+            origin:
+              only_one_active: non attivare più alias per destinatario 
+            enabled:
+              only_one_active: non attivare più alias per destinatario 
+            to_self:
+              cant_add_to_Self: impossibile impostare per questo alias
+        alias:
+          attributes:
+            destinations:
+              destination_not_found: "destinazioni %{dests} non trovate"
+              do_not_add_self: "non aggiungere %{origin} ai destinatari"
+            origin:
+              only_one_active: non attivare più alias per destinatario 
+            enabled:
+              only_one_active: non attivare più alias per destinatario 
+            to_self:
+              cant_add_to_Self: impossibile impostare per questo alias

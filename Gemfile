@@ -48,3 +48,5 @@ gem 'activeadmin', '~> 1.0.0.pre1'
 
 gem 'mysql2'
 gem 'devise'
+
+gem 'rails-i18n'

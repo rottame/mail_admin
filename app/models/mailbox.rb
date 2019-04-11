@@ -1,6 +1,6 @@
 class Mailbox < ActiveRecord::Base
-  validates :username, presence: true, uniqueness: true, length: { minimum: 7 }
-  validates :password, presence: true, length: { minimum: 7 }
+  validates :username, presence: true, uniqueness: true, length: { minimum: 5 }
+  validates :password, presence: true, length: { minimum: 5 }
 
   before_validation :create_password
 

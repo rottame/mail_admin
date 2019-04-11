@@ -1,5 +1,4 @@
 ActiveAdmin.register Mailbox do
-  actions :all, except: [:destroy]
   menu priority: 0
   permit_params do
     perm = [:password, :enabled, :password_confirmation]

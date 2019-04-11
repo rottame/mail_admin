@@ -11,7 +11,7 @@ class Alias < ActiveRecord::Base
   belongs_to :mailbox, primary_key: :username, foreign_key: :origin
 
   def destinations=(dests)
-    dests = dests.split(/[,\ \n]/).map(&:strip).compact.reject{|d| d.blank?}.uniq.join("\n")
+    dests = dests.split(/[,\ \r\n]/).map(&:strip).compact.reject{|d| d.blank?}.uniq.join("\n")
     write_attribute :destinations, dests
   end
 
@@ -34,11 +34,13 @@ class Alias < ActiveRecord::Base
   protected
 
   def unique_active
-    chain = self.class.where(origin: self.origin).where(enabled: true)
-    chain = chain.where.not(id: self.id) unless new_record?
-    if chain.any?
-      errors.add(:origin, :only_one_active)
-      errors.add(:enabled, :only_one_active)
+    if enabled?
+      chain = self.class.where(origin: self.origin).where(enabled: true)
+      chain = chain.where.not(id: self.id) unless new_record?
+      if chain.any?
+        errors.add(:origin, :only_one_active)
+        errors.add(:enabled, :only_one_active)
+      end
     end
   end
 
@@ -56,11 +58,12 @@ class Alias < ActiveRecord::Base
 
   def valid_destinations
     dests = destinations.split(/\n/).map(&:strip)
-    dests = dests.reject{|d| d =~ /@/ }
-    errors.add(:destinations, :do_not_add_self) if dests.include?(origin)
+    dests = dests.reject{|d| d =~ /[\/@]/ }
+    errors.add(:destinations, :do_not_add_self, origin: origin) if dests.include?(origin)
     if dests.any?
       existing = Alias.where(origin: dests).map(&:origin)
-      existing = Mailbox.where(username: dests).map(&:username)
+      existing << Mailbox.where(username: dests).map(&:username)
+      existing << Alias.where(origin: dests).map(&:origin)
       existing = existing.flatten.uniq
       diff = dests - existing
       errors.add(:destinations, :destination_not_found, dests: diff.join(', ')) if diff.any?
